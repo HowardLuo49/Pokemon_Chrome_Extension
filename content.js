@@ -1,11 +1,28 @@
+let pokemonSprites = [];
+
+fetch(chrome.runtime.getURL("data/pokemon_names.txt"))
+  .then(response => response.text())
+  .then(text => {
+    pokemonSprites = text.split("\n").filter(name => name.trim() !== "");
+    console.log("Loaded Pokémon sprites:", pokemonSprites);
+  })
+  .catch(error => console.error("Failed to load Pokémon names:", error));
+
+function getRandomSprite() {
+  if (pokemonSprites.length === 0) return null;
+  const randomIndex = Math.floor(Math.random() * pokemonSprites.length);
+  return pokemonSprites[randomIndex];
+}
+
 function spawnPokemon() {
+    const sprite = getRandomSprite();
     const pokemon = document.createElement('img');
-    pokemon.src = chrome.runtime.getURL('sprites/pikachu.png'); // Replace with random sprite logic
+    pokemon.src = chrome.runtime.getURL(`sprites/${sprite}`);
     pokemon.style.position = 'fixed';
     pokemon.style.left = `${Math.random() * window.innerWidth}px`;
     pokemon.style.top = `${Math.random() * window.innerHeight}px`;
-    pokemon.style.width = '50px'; // Set sprite width
-    pokemon.style.height = '50px'; // Set sprite height
+    pokemon.style.width = '100px'; // Set sprite width
+    pokemon.style.height = '100px'; // Set sprite height
     pokemon.style.zIndex = 10000;
     pokemon.style.cursor = 'pointer';
   
@@ -26,22 +43,24 @@ function spawnPokemon() {
     setTimeout(() => pokemon.remove(), 5000);
   }
   
-  function showCaughtImage(centerX, centerY, spriteHeight) {
-    const caughtImage = document.createElement('img');
-    caughtImage.src = chrome.runtime.getURL('static/caught.png');
-    caughtImage.style.position = 'fixed';
+  function showCaughtImage(centerX, centerY) {
+    const caughtImage = document.createElement("img");
+    caughtImage.src = chrome.runtime.getURL("static/caught.png");
+    caughtImage.style.position = "fixed";
     caughtImage.style.zIndex = 10001;
+    caughtImage.style.visibility = "hidden"; // Initially hide the image
   
-    // Scale "Caught" image to match sprite's height and align centers
+    // Center the "Caught" image without resizing
     caughtImage.onload = () => {
-      const aspectRatio = caughtImage.naturalWidth / caughtImage.naturalHeight;
-      const caughtHeight = spriteHeight;
-      const caughtWidth = spriteHeight * aspectRatio;
+      const caughtWidth = caughtImage.naturalWidth;
+      const caughtHeight = caughtImage.naturalHeight;
   
-      caughtImage.style.width = `${caughtWidth}px`;
-      caughtImage.style.height = `${caughtHeight}px`;
+      // Position the image correctly
       caughtImage.style.left = `${centerX - caughtWidth / 2}px`;
       caughtImage.style.top = `${centerY - caughtHeight / 2}px`;
+  
+      // Make the image visible after positioning
+      caughtImage.style.visibility = "visible";
     };
   
     document.body.appendChild(caughtImage);
@@ -50,6 +69,7 @@ function spawnPokemon() {
     setTimeout(() => caughtImage.remove(), 2000);
   }
   
+
   // Spawn Pokémon every 10 seconds
   setInterval(spawnPokemon, 1000);
   

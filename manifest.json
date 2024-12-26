@@ -20,7 +20,7 @@
     },
     "web_accessible_resources": [
         {
-            "resources": ["sprites/*", "static/*"],
+            "resources": ["sprites/*", "static/*", "data/pokemon_names.txt"],
             "matches": ["<all_urls>"]
         }
     ]
