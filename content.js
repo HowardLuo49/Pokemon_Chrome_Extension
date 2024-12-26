@@ -77,5 +77,6 @@ function spawnPokemon() {
 
   // Spawn Pokémon every second
   setInterval(spawnPokemon, 1000);
+//   setInterval(spawnPokemon, 10 * 60 * 1000);
 
   
