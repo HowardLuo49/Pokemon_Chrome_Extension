@@ -1,5 +1,5 @@
 let pokemonSprites = [];
-
+  
 fetch(chrome.runtime.getURL("data/pokemon_names.txt"))
   .then(response => response.text())
   .then(text => {
@@ -25,6 +25,10 @@ function spawnPokemon() {
     pokemon.style.height = '100px'; // Set sprite height
     pokemon.style.zIndex = 10000;
     pokemon.style.cursor = 'pointer';
+
+    // Randomize rotation angle
+    const randomRotation = Math.random() * 90 - 45; // Angle between 0 and 360 degrees
+    pokemon.style.transform = `rotate(${randomRotation}deg)`;
   
     document.body.appendChild(pokemon);
   
@@ -38,6 +42,7 @@ function spawnPokemon() {
       // Remove the Pokémon
       pokemon.remove();
     });
+      
   
     // Remove Pokémon after 5 seconds if not clicked
     setTimeout(() => pokemon.remove(), 5000);
@@ -70,6 +75,7 @@ function spawnPokemon() {
   }
   
 
-  // Spawn Pokémon every 10 seconds
+  // Spawn Pokémon every second
   setInterval(spawnPokemon, 1000);
+
   
