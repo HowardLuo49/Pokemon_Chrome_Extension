@@ -1,0 +1,28 @@
+{
+    "manifest_version": 3,
+    "name": "Pokemon Catcher",
+    "version": "1.0",
+    "description": "Catch Pokémon while browsing the web!",
+    "permissions": ["activeTab"],
+    "host_permissions": ["<all_urls>"],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"],
+            "css": ["styles.css"]
+        }
+    ],
+    "action": {
+      "default_title": "Pokémon Catcher"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": ["sprites/*", "static/*"],
+            "matches": ["<all_urls>"]
+        }
+    ]
+  }
+  
