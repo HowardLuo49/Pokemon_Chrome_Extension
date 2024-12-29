@@ -1,0 +1,17 @@
+body {
+    font-family: Arial, sans-serif;
+    width: 225px;
+    height: 75px;
+    padding: 10px;
+}
+#caught-count {
+    font-size: 16px;
+    font-weight: bold;
+}
+#dropdown {
+    margin-top: 10px;
+    width: 100%;
+}
+h4 {
+    margin-bottom: 0px;
+}
