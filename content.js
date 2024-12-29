@@ -55,8 +55,14 @@ function spawnPokemon() {
   
     pokemon.addEventListener('click', () => {
         const { left, top, width, height } = pokemon.getBoundingClientRect();
-        showCaughtImage(left + width / 2, top + height / 2, height);
-        caughtPokemonSet.add(sprite);
+
+        if (Math.random() < 0.3) {
+            showFailedImage(left + width / 2, top + height / 2, height);
+        } else {
+            showCaughtImage(left + width / 2, top + height / 2, height);
+            caughtPokemonSet.add(sprite);
+            saveProgress();
+        }
         pokemon.remove();
     });
 
@@ -66,6 +72,28 @@ function spawnPokemon() {
     setTimeout(() => pokemon.remove(), 2000);
 }
   
+// Catch failed
+function showFailedImage(centerX, centerY, height) {
+    const failedImage = document.createElement("img");
+    failedImage.src = chrome.runtime.getURL("static/failed.png");
+    failedImage.style.position = "fixed";
+    failedImage.style.zIndex = 10001;
+    failedImage.style.visibility = "hidden";
+  
+    failedImage.onload = () => {
+        const caughtWidth = failedImage.naturalWidth;
+        const caughtHeight = failedImage.naturalHeight;
+        failedImage.style.left = `${centerX - caughtWidth / 2}px`;
+        failedImage.style.top = `${centerY - caughtHeight / 2}px`;
+        failedImage.style.visibility = "visible";
+    };
+  
+    document.body.appendChild(failedImage);
+  
+    // Despawn "Failed"
+    setTimeout(() => failedImage.remove(), 1000);
+}
+
 // Catch confirm
 function showCaughtImage(centerX, centerY) {
     const caughtImage = document.createElement("img");
@@ -77,10 +105,8 @@ function showCaughtImage(centerX, centerY) {
     caughtImage.onload = () => {
         const caughtWidth = caughtImage.naturalWidth;
         const caughtHeight = caughtImage.naturalHeight;
-
         caughtImage.style.left = `${centerX - caughtWidth / 2}px`;
         caughtImage.style.top = `${centerY - caughtHeight / 2}px`;
-
         caughtImage.style.visibility = "visible";
     };
 
@@ -125,7 +151,6 @@ function scheduleNextSpawn() {
 }
   
 // Start spawning
-scheduleNextSpawn();
+// scheduleNextSpawn();
 
-// setInterval(spawnPokemon, 1000);
-// setInterval(spawnPokemon, 10 * 60 * 1000);
+setInterval(spawnPokemon, 1000);
