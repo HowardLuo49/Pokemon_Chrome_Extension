@@ -1,7 +1,22 @@
 let pokemonSprites = [];
-const caughtPokemonSet = new Set();
+let caughtPokemonSet = new Set();
 
 console.log("content.js is running!");
+
+// Function to save caughtPokemonSet to Chrome Storage
+function saveProgress() {
+    chrome.storage.local.set({ caughtPokemon: Array.from(caughtPokemonSet) }, () => {
+        console.log("Progress saved:", caughtPokemonSet);
+    });
+}
+
+// Load saved progress
+chrome.storage.local.get("caughtPokemon", (data) => {
+    if (data.caughtPokemon) {
+        caughtPokemonSet = new Set(data.caughtPokemon);
+        console.log("Progress loaded:", caughtPokemonSet);
+    }
+});
 
 // Load all pokemon names
 fetch(chrome.runtime.getURL("data/pokemon_names.txt"))
@@ -44,6 +59,8 @@ function spawnPokemon() {
         caughtPokemonSet.add(sprite);
         pokemon.remove();
     });
+
+    saveProgress();
 
     // Despawn
     setTimeout(() => pokemon.remove(), 2000);
@@ -89,6 +106,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true;
       }
 });  
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.type === "RESET_PROGRESS") {
+        caughtPokemonSet.clear();
+        chrome.storage.local.set({ caughtPokemon: [] }, () => {
+            console.log("Progress reset. Caught Pokemon set cleared.");
+            sendResponse({ success: true });
+        });
+        return true;
+    }
+});
+  
 
 setInterval(spawnPokemon, 1000);
 //   setInterval(spawnPokemon, 10 * 60 * 1000);

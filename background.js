@@ -10,4 +10,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         });
         return true;
     }
-  });
+});
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.type === "RESET_PROGRESS") {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs[0]?.id) {
+            chrome.tabs.sendMessage(tabs[0].id, request, sendResponse);
+        } else {
+            console.error("No active tab found.");
+            sendResponse({ success: false });
+        }
+        });
+        return true;
+    }
+});
+  
