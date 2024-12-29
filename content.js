@@ -117,8 +117,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true;
     }
 });
+
+function scheduleNextSpawn() {
+    const interval = Math.random() * (10 - 5) * 60 * 1000 + 5 * 60 * 1000;
+    console.log(`Next spawn in: ${(interval / 1000 / 60).toFixed(2)} minutes.`);
+    setTimeout(spawnPokemon, interval);
+}
   
+// Start spawning
+scheduleNextSpawn();
 
-setInterval(spawnPokemon, 1000);
-//   setInterval(spawnPokemon, 10 * 60 * 1000);
-
+// setInterval(spawnPokemon, 1000);
+// setInterval(spawnPokemon, 10 * 60 * 1000);
