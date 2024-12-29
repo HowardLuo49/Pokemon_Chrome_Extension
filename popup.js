@@ -6,7 +6,6 @@ resetButton.addEventListener("click", () => {
     if (userConfirmed) {
         chrome.runtime.sendMessage({ type: "RESET_PROGRESS" }, (response) => {
             if (chrome.runtime.lastError) {
-                console.error("Error resetting progress:", chrome.runtime.lastError.message);
                 return;
             }
 
@@ -22,9 +21,8 @@ chrome.runtime.sendMessage({ type: "GET_CAUGHT_AND_UNCAUGHT" }, (response) => {
   const dropdown = document.getElementById("dropdown");
 
     if (chrome.runtime.lastError) {
-        console.error("Error contacting background.js:", chrome.runtime.lastError.message);
-        countElement.textContent = "Unable to fetch caught count.";
-        dropdown.innerHTML = "<option>Error loading data</option>";
+        countElement.textContent = "Extension can't work on this page.";
+        dropdown.innerHTML = "<option>Extension can't work on this page.</option>";
         return;
     }
 
@@ -38,8 +36,8 @@ chrome.runtime.sendMessage({ type: "GET_CAUGHT_AND_UNCAUGHT" }, (response) => {
             dropdown.appendChild(option);
         });
     } else {
-        countElement.textContent = "Unable to fetch caught count.";
-        dropdown.innerHTML = "<option>Error loading data</option>";
-        console.error("Unexpected response:", response);
+        countElement.textContent = "Extension can't work on this page.";
+        dropdown.innerHTML = "<option>Extension can't work on this page.</option>";
+        return;
     }
 });

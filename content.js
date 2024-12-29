@@ -151,6 +151,6 @@ function scheduleNextSpawn() {
 }
   
 // Start spawning
-// scheduleNextSpawn();
+scheduleNextSpawn();
 
-setInterval(spawnPokemon, 1000);
+// setInterval(spawnPokemon, 1000);
